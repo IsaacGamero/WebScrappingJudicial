@@ -4,7 +4,10 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import ModalCrearAlerta from '@/components/alertas/ModalCrearAlerta';
 import DashboardMonitoreo from '@/components/alertas/DashboardMonitoreo';
+<<<<<<< HEAD
 import BuscadorExpedientes, { FiltrosBusqueda } from '@/components/alertas/BuscadorExpedientes';
+=======
+>>>>>>> 915472426fd24239d6664e3e789987d377f9fdf7
 import { Alerta } from '@/data/mockData';
 
 // ============================================================
@@ -16,15 +19,21 @@ export default function BuscadorCasacionesPage() {
   const { alertas } = useApp();
 
   const [vistaActual, setVistaActual] = useState<'buscador' | 'monitoreo'>('buscador');
+<<<<<<< HEAD
   const [busquedaRealizada, setBusquedaRealizada] = useState(false);
   const [busquedaLoading, setBusquedaLoading] = useState(false);
   const [filtrosActivos, setFiltrosActivos] = useState<FiltrosBusqueda | null>(null);
+=======
+  const [termino, setTermino] = useState('');
+  const [busquedaRealizada, setBusquedaRealizada] = useState(false);
+>>>>>>> 915472426fd24239d6664e3e789987d377f9fdf7
   const [modalAlertaAbierto, setModalAlertaAbierto] = useState(false);
   const [valorParaModal, setValorParaModal] = useState('');
   const [toastData, setToastData] = useState<{ valor: string; tipo: string } | null>(null);
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState<any>(null);
 
   // Manejador de búsqueda
+<<<<<<< HEAD
   const handleBuscar = (filtros: FiltrosBusqueda) => {
     setBusquedaLoading(true);
     setFiltrosActivos(filtros);
@@ -33,6 +42,11 @@ export default function BuscadorCasacionesPage() {
       setBusquedaRealizada(true);
       setBusquedaLoading(false);
     }, 800);
+=======
+  const handleBuscar = (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusquedaRealizada(true);
+>>>>>>> 915472426fd24239d6664e3e789987d377f9fdf7
   };
 
   // Abrir modal con valor predeterminado
@@ -124,7 +138,11 @@ export default function BuscadorCasacionesPage() {
 
         {/* Botón rápido "+ Crear Alerta" */}
         <button
+<<<<<<< HEAD
           onClick={() => handleAbrirModal(filtrosActivos?.codigoExpediente || filtrosActivos?.nroExpediente || '')}
+=======
+          onClick={() => handleAbrirModal(termino)}
+>>>>>>> 915472426fd24239d6664e3e789987d377f9fdf7
           className="hidden sm:inline-flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-medium transition"
         >
           <svg
@@ -152,6 +170,7 @@ export default function BuscadorCasacionesPage() {
           })}
         />
       ) : (
+<<<<<<< HEAD
         /* --- VISTA 1: BUSCADOR POR FILTROS (replica Portal PJ) --- */
         <div className="space-y-6">
           {/* Header con título y botón crear alerta */}
@@ -190,6 +209,121 @@ export default function BuscadorCasacionesPage() {
               </p>
             </div>
           )}
+=======
+        /* --- VISTA 1: BUSCADOR EXACTO DE LA CAPTURA DE PANTALLA --- */
+        <div className="space-y-6">
+          {/* Contenedor Principal de Búsqueda */}
+          <div className="rounded-2xl border border-slate-800/80 bg-[#0d1527]/80 backdrop-blur-md p-6 sm:p-7 shadow-xl">
+            <form onSubmit={handleBuscar} className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-medium text-slate-400 tracking-wide">
+                  Búsqueda
+                </label>
+
+                <button
+                  type="button"
+                  onClick={() => handleAbrirModal(termino)}
+                  className="text-xs text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1.5 transition"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-3.5 h-3.5"
+                  >
+                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                  </svg>
+                  + Crear Alerta de Monitoreo
+                </button>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                {/* Input de Búsqueda con Ícono */}
+                <div className="relative flex-1 max-w-xl">
+                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-4 h-4"
+                    >
+                      <circle cx="11" cy="11" r="8" />
+                      <path d="m21 21-4.3-4.3" />
+                    </svg>
+                  </span>
+                  <input
+                    type="text"
+                    value={termino}
+                    onChange={(e) => setTermino(e.target.value)}
+                    placeholder="N°, materia, vocal..."
+                    className="w-full pl-10 pr-4 py-2.5 bg-[#162035] border border-[#233352] rounded-lg text-sm text-white placeholder-slate-400 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition"
+                  />
+                </div>
+
+                {/* Botón Naranja "Buscar" */}
+                <button
+                  type="submit"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-sm rounded-lg shadow-lg shadow-amber-500/20 transition duration-150 cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="w-4 h-4"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                  </svg>
+                  Buscar
+                </button>
+
+                {/* Botón que abre el modal prellenado */}
+                {termino.trim().length > 2 && (
+                  <button
+                    type="button"
+                    onClick={() => handleAbrirModal(termino)}
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-amber-500/40 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 text-xs font-medium transition cursor-pointer"
+                    title="Monitorear automáticamente este término y recibir alertas"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="w-3.5 h-3.5"
+                    >
+                      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+                      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+                    </svg>
+                    + Activar Alerta para esta búsqueda
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+
+          {/* Indicador de Resultados */}
+          <div className="pt-2">
+            <p className="text-xs text-slate-400 font-normal">
+              <strong className="text-slate-200 font-semibold">
+                {busquedaRealizada ? '0' : '0'}
+              </strong>{' '}
+              resultados encontrados
+            </p>
+          </div>
+>>>>>>> 915472426fd24239d6664e3e789987d377f9fdf7
 
           {/* Estado Vacío Central */}
           <div className="py-24 sm:py-32 flex flex-col items-center justify-center text-center px-4">
@@ -224,7 +358,11 @@ export default function BuscadorCasacionesPage() {
                 </p>
                 <div className="mt-3 flex items-center gap-4">
                   <button
+<<<<<<< HEAD
                     onClick={() => handleAbrirModal(filtrosActivos?.codigoExpediente || filtrosActivos?.nroExpediente || '')}
+=======
+                    onClick={() => handleAbrirModal(termino)}
+>>>>>>> 915472426fd24239d6664e3e789987d377f9fdf7
                     className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium"
                   >
                     <span>Configurar alerta de monitoreo</span>
