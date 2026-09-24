@@ -44,7 +44,6 @@ export default function ModalCrearAlerta({
   const [paso, setPaso] = useState<Paso>('buscar');
   const [buscando, setBuscando] = useState(false);
   const [expediente, setExpediente] = useState<ExpedienteEncontrado | null>(null);
-  const [referencia, setReferencia] = useState('');
   const [activando, setActivando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -57,7 +56,6 @@ export default function ModalCrearAlerta({
     if (isOpen) {
       setPaso('buscar');
       setExpediente(null);
-      setReferencia('');
       setError(null);
       recienValidado.current = false;
     }
@@ -112,7 +110,6 @@ export default function ModalCrearAlerta({
         detalle: [expediente.distritoJudicial, expediente.organo, expediente.parte]
           .filter(Boolean)
           .join(' · '),
-        referencia: referencia.trim() || undefined,
         estado: 'activo',
         costoTokens: 0,
       });
@@ -204,21 +201,6 @@ export default function ModalCrearAlerta({
                       })}
                     </dd>
                   </dl>
-                </div>
-
-                {/* Referencia opcional */}
-                <div className="space-y-1.5">
-                  <label htmlFor="referencia-alerta" className="block text-xs font-medium text-slate-300">
-                    Referencia o Cliente <span className="text-slate-500">(opcional)</span>
-                  </label>
-                  <input
-                    id="referencia-alerta"
-                    type="text"
-                    value={referencia}
-                    onChange={(e) => setReferencia(e.target.value)}
-                    placeholder="Ej. Caso Empresa ABC / Demandante"
-                    className="w-full px-3.5 py-2 bg-[#162035] border border-[#233352] rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500 transition"
-                  />
                 </div>
 
                 {/* Consultante validado */}

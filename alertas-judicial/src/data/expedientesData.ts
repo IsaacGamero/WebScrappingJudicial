@@ -51,6 +51,7 @@ export function consultarExpediente(filtros: FiltrosBusqueda): Promise<Expedient
       organo: [nro ? `${Number(nro)}° ${instancia}` : instancia, especialidad]
         .filter(Boolean)
         .join(' '),
+      parte: filtros.parte.trim().toUpperCase(),
       estadoProcesal: 'EN TRÁMITE',
       ultimaActuacion: hace3Dias,
     };

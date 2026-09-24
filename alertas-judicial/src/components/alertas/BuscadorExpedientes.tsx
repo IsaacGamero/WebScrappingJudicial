@@ -96,6 +96,8 @@ export default function BuscadorExpedientes({
     } else if (!/\d{4,5}-\d{4}/.test(codigoExpediente)) {
       e.codigoExpediente = 'Formato inválido. Ej: 00456-2024-0-1801-JR-CI-05';
     }
+    // El portal del PJ exige la parte también en la consulta por código
+    if (!parte.trim()) e.parte = 'Ingresa al menos un apellido o razón social';
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -481,6 +483,38 @@ export default function BuscadorExpedientes({
                   </button>
                 ))}
               </div>
+            </div>
+
+            {/* Parte (obligatoria también en la consulta por código) */}
+            <div className="space-y-2">
+              <label className="block text-xs font-medium text-slate-300">
+                Parte <span className="text-amber-400">(*)</span>
+              </label>
+              <input
+                type="text"
+                value={parte}
+                onChange={(e) => {
+                  setParte(e.target.value);
+                  setErrors((prev) => ({ ...prev, parte: '' }));
+                }}
+                placeholder="APELLIDO PATERNO Y APELLIDO MATERNO O RAZÓN SOCIAL"
+                className={`w-full px-3.5 py-3 bg-[#162035] border rounded-lg text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500 transition ${
+                  errors.parte
+                    ? 'border-red-500/60 focus:border-red-500'
+                    : 'border-[#233352] focus:border-amber-500'
+                }`}
+              />
+              {errors.parte && (
+                <p className="text-[11px] text-red-400">{errors.parte}</p>
+              )}
+              <p className="text-[11px] text-amber-300/80 italic leading-relaxed">
+                Ingresar ambos apellidos (paterno y materno) o la razón social de alguna de las
+                partes involucradas en el proceso, tal como aparecen en las resoluciones del expediente.
+              </p>
+            </div>
+
+            <div className="pt-1 text-center">
+              <span className="text-xs text-amber-400 font-medium">(*) Datos obligatorios</span>
             </div>
           </div>
         )}

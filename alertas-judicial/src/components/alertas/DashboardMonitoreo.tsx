@@ -40,7 +40,7 @@ export default function DashboardMonitoreo({
   // Filtrado de la lista
   const alertasFiltradas = alertas.filter((a) => {
     const coincideEstado = filtroEstado === 'todos' || a.estado === filtroEstado;
-    const texto = [a.valor, a.detalle, a.referencia].filter(Boolean).join(' ').toLowerCase();
+    const texto = [a.valor, a.detalle].filter(Boolean).join(' ').toLowerCase();
     const coincideTexto = texto.includes(busquedaLocal.toLowerCase());
     return coincideEstado && coincideTexto;
   });
@@ -335,11 +335,6 @@ export default function DashboardMonitoreo({
                           {alerta.detalle && (
                             <p className="text-[11px] text-slate-400 mt-0.5 truncate max-w-xs sm:max-w-md">
                               {alerta.detalle}
-                            </p>
-                          )}
-                          {alerta.referencia && (
-                            <p className="text-[11px] text-amber-300/80 mt-0.5 truncate max-w-xs sm:max-w-md">
-                              Ref.: {alerta.referencia}
                             </p>
                           )}
                           <p className="text-[10px] text-slate-500 mt-0.5">
