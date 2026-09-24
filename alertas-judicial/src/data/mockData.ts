@@ -21,6 +21,8 @@ export interface Alerta {
   id: string;
   tipo: 'expediente' | 'palabra_clave';
   valor: string; // Número de expediente o palabra clave
+  detalle?: string; // Órgano / distrito / parte del expediente consultado
+  referencia?: string; // Cliente o referencia interna del abogado
   estado: 'activo' | 'pausado' | 'encontrado';
   fechaRegistro: string;
   ultimaRevision: string;

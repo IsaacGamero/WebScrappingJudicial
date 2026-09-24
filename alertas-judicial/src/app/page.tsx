@@ -4,36 +4,21 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import ModalCrearAlerta from '@/components/alertas/ModalCrearAlerta';
 import DashboardMonitoreo from '@/components/alertas/DashboardMonitoreo';
-import BuscadorExpedientes, { FiltrosBusqueda } from '@/components/alertas/BuscadorExpedientes';
+import BuscadorCasaciones from '@/components/alertas/BuscadorCasaciones';
 import { Alerta } from '@/data/mockData';
 
 // ============================================================
 // BUSCADOR DE CASACIONES + DASHBOARD DE CASOS MONITOREADOS
-// (Fases 1, 2 y 3)
 // ============================================================
 
 export default function BuscadorCasacionesPage() {
   const { alertas } = useApp();
 
   const [vistaActual, setVistaActual] = useState<'buscador' | 'monitoreo'>('buscador');
-  const [busquedaRealizada, setBusquedaRealizada] = useState(false);
-  const [busquedaLoading, setBusquedaLoading] = useState(false);
-  const [filtrosActivos, setFiltrosActivos] = useState<FiltrosBusqueda | null>(null);
   const [modalAlertaAbierto, setModalAlertaAbierto] = useState(false);
   const [valorParaModal, setValorParaModal] = useState('');
   const [toastData, setToastData] = useState<{ valor: string; tipo: string } | null>(null);
   const [documentoSeleccionado, setDocumentoSeleccionado] = useState<any>(null);
-
-  // Manejador de búsqueda
-  const handleBuscar = (filtros: FiltrosBusqueda) => {
-    setBusquedaLoading(true);
-    setFiltrosActivos(filtros);
-    // Simula llamada al backend
-    setTimeout(() => {
-      setBusquedaRealizada(true);
-      setBusquedaLoading(false);
-    }, 800);
-  };
 
   // Abrir modal con valor predeterminado
   const handleAbrirModal = (prefill: string = '') => {
@@ -121,25 +106,6 @@ export default function BuscadorCasacionesPage() {
             </span>
           </button>
         </div>
-
-        {/* Botón rápido "+ Crear Alerta" */}
-        <button
-          onClick={() => handleAbrirModal(filtrosActivos?.codigoExpediente || filtrosActivos?.nroExpediente || '')}
-          className="hidden sm:inline-flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl text-xs font-medium transition"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className="w-3.5 h-3.5"
-          >
-            <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-            <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-          </svg>
-          + Nueva Alerta
-        </button>
       </div>
 
       {/* --- RENDER CONDICIONAL SEGÚN VISTA SELECCIONADA --- */}
@@ -152,95 +118,12 @@ export default function BuscadorCasacionesPage() {
           })}
         />
       ) : (
-        /* --- VISTA 1: BUSCADOR POR FILTROS (replica Portal PJ) --- */
-        <div className="space-y-6">
-          {/* Header con título y botón crear alerta */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-sm font-semibold text-white tracking-wide">Búsqueda de Expedientes</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Portal del Poder Judicial del Perú</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => handleAbrirModal(filtrosActivos?.codigoExpediente || filtrosActivos?.nroExpediente || '')}
-              className="text-xs text-amber-400 hover:text-amber-300 font-medium flex items-center gap-1.5 transition"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
-                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-              </svg>
-              + Crear Alerta de Monitoreo
-            </button>
-          </div>
-
-          {/* Formulario de búsqueda por categorías */}
-          <BuscadorExpedientes onBuscar={handleBuscar} loading={busquedaLoading} />
-
-          {/* Indicador de Resultados */}
-          {busquedaRealizada && filtrosActivos && (
-            <div className="pt-2 flex items-center justify-between">
-              <p className="text-xs text-slate-400 font-normal">
-                <strong className="text-slate-200 font-semibold">0</strong>{' '}
-                resultados para{' '}
-                <span className="text-amber-400 font-mono">
-                  {filtrosActivos.modo === 'codigo'
-                    ? filtrosActivos.codigoExpediente
-                    : `${filtrosActivos.distritoJudicial} / ${filtrosActivos.instancia} / ${filtrosActivos.especialidad} / ${filtrosActivos.anio}`}
-                </span>
-              </p>
-            </div>
-          )}
-
-          {/* Estado Vacío Central */}
-          <div className="py-24 sm:py-32 flex flex-col items-center justify-center text-center px-4">
-            <h2 className="text-base sm:text-lg font-normal text-slate-300">
-              No se encontraron resultados
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Intenta con otra búsqueda o cambia los filtros
-            </p>
-
-            {/* Banner CTA */}
-            <div className="mt-8 p-5 rounded-2xl border border-slate-800 bg-[#0d1527]/70 max-w-lg text-left flex items-start gap-4">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center shrink-0">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="w-5 h-5"
-                >
-                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
-                  <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h4 className="text-xs font-semibold text-white">
-                  ¿Esperando una resolución que aún no se publica?
-                </h4>
-                <p className="text-[11px] text-slate-400 mt-1 leading-relaxed">
-                  No necesitas entrar a revisar todos los días. Registra el número de expediente y nuestro bot te notificará de inmediato cuando aparezca en las Salas Supremas.
-                </p>
-                <div className="mt-3 flex items-center gap-4">
-                  <button
-                    onClick={() => handleAbrirModal(filtrosActivos?.codigoExpediente || filtrosActivos?.nroExpediente || '')}
-                    className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-medium"
-                  >
-                    <span>Configurar alerta de monitoreo</span>
-                    <span>→</span>
-                  </button>
-                  <button
-                    onClick={() => setVistaActual('monitoreo')}
-                    className="text-xs text-slate-400 hover:text-white transition"
-                  >
-                    Ver mis {alertas.length} casos activos →
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        /* --- VISTA 1: BUSCADOR DE CASACIONES (simulado) --- */
+        <BuscadorCasaciones
+          totalCasosMonitoreados={alertas.length}
+          onCrearAlerta={handleAbrirModal}
+          onVerMonitoreo={() => setVistaActual('monitoreo')}
+        />
       )}
 
       {/* --- MODAL CREAR ALERTA (FASE 2) --- */}

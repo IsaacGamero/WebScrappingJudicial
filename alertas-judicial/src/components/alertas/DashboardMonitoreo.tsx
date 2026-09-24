@@ -5,7 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { Alerta } from '@/data/mockData';
 
 // ============================================================
-// DASHBOARD DE CASOS MONITOREADOS (FASE 3)
+// DASHBOARD DE CASOS MONITOREADOS
 // Tabla y tarjetas interactivas de expedientes en seguimiento.
 // Permite:
 // - Filtrar por estado (Activo, Encontrado, Pausado).
@@ -40,7 +40,8 @@ export default function DashboardMonitoreo({
   // Filtrado de la lista
   const alertasFiltradas = alertas.filter((a) => {
     const coincideEstado = filtroEstado === 'todos' || a.estado === filtroEstado;
-    const coincideTexto = a.valor.toLowerCase().includes(busquedaLocal.toLowerCase());
+    const texto = [a.valor, a.detalle, a.referencia].filter(Boolean).join(' ').toLowerCase();
+    const coincideTexto = texto.includes(busquedaLocal.toLowerCase());
     return coincideEstado && coincideTexto;
   });
 
@@ -160,6 +161,38 @@ export default function DashboardMonitoreo({
         </button>
       </div>
 
+      {totalCasos === 0 ? (
+        /* --- Estado vacío: usuario sin casos monitoreados --- */
+        <div className="rounded-2xl border border-dashed border-slate-700/80 bg-[#0d1527]/50 px-6 py-16 text-center">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 mx-auto flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-7 h-7">
+              <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+              <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+            </svg>
+          </div>
+          <h3 className="mt-5 text-base font-semibold text-white">
+            Aún no tienes casos en monitoreo
+          </h3>
+          <p className="mt-1.5 text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+            Crea una alerta sobre un expediente y el bot revisará el portal del Poder Judicial por ti.
+            Te avisaremos en la campana superior apenas se publique una nueva resolución.
+          </p>
+          <button
+            onClick={onOpenCrearAlerta}
+            className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-semibold text-xs rounded-xl shadow-lg shadow-amber-500/20 transition"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="w-4 h-4">
+              <path d="M12 5v14" />
+              <path d="M5 12h14" />
+            </svg>
+            Crear mi primera alerta
+          </button>
+          <p className="mt-4 text-[11px] text-slate-500">
+            Se solicitará validar tu identidad (DNI, CE u otro) si aún no lo has hecho.
+          </p>
+        </div>
+      ) : (
+      <>
       {/* --- Barra de Filtros y Búsqueda Rápida --- */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
         {/* Pestañas de Filtro por Estado */}
@@ -299,6 +332,16 @@ export default function DashboardMonitoreo({
                           <p className="font-semibold text-white truncate max-w-xs sm:max-w-sm">
                             {alerta.valor}
                           </p>
+                          {alerta.detalle && (
+                            <p className="text-[11px] text-slate-400 mt-0.5 truncate max-w-xs sm:max-w-md">
+                              {alerta.detalle}
+                            </p>
+                          )}
+                          {alerta.referencia && (
+                            <p className="text-[11px] text-amber-300/80 mt-0.5 truncate max-w-xs sm:max-w-md">
+                              Ref.: {alerta.referencia}
+                            </p>
+                          )}
                           <p className="text-[10px] text-slate-500 mt-0.5">
                             Registrado: {new Date(alerta.fechaRegistro).toLocaleDateString('es-PE')}
                           </p>
@@ -427,6 +470,8 @@ export default function DashboardMonitoreo({
             </span>
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );

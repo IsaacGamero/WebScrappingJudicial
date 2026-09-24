@@ -6,8 +6,6 @@ import {
   Alerta,
   Notificacion,
   usuarioMock,
-  alertasMock,
-  notificacionesMock,
 } from '@/data/mockData';
 
 // ============================================================
@@ -38,8 +36,10 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [usuario, setUsuario] = useState<Usuario>(usuarioMock);
-  const [alertas, setAlertas] = useState<Alerta[]>(alertasMock);
-  const [notificaciones, setNotificaciones] = useState<Notificacion[]>(notificacionesMock);
+  // Usuario nuevo: arranca sin casos monitoreados ni notificaciones.
+  // (alertasMock / notificacionesMock quedan en mockData.ts como referencia de demo)
+  const [alertas, setAlertas] = useState<Alerta[]>([]);
+  const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
 
   // Contador de notificaciones no leídas
   const notificacionesNoLeidas = notificaciones.filter((n) => !n.leida).length;

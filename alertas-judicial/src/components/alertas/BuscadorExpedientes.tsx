@@ -33,6 +33,8 @@ export interface FiltrosBusqueda {
 interface BuscadorExpedientesProps {
   onBuscar: (filtros: FiltrosBusqueda) => void;
   loading?: boolean;
+  /** CUE para prellenar: si se envía, el buscador abre en la pestaña "Por Código" */
+  codigoInicial?: string;
 }
 
 const CAMPO_VACIO = '--SELECCIONAR';
@@ -40,9 +42,10 @@ const CAMPO_VACIO = '--SELECCIONAR';
 export default function BuscadorExpedientes({
   onBuscar,
   loading = false,
+  codigoInicial = '',
 }: BuscadorExpedientesProps) {
-  const { identidad, tieneIdentidad, limpiarIdentidad } = useIdentidad();
-  const [modo, setModo] = useState<'filtros' | 'codigo'>('filtros');
+  const { identidad, tieneIdentidad } = useIdentidad();
+  const [modo, setModo] = useState<'filtros' | 'codigo'>(codigoInicial ? 'codigo' : 'filtros');
 
   // Campos por filtros
   const [distrito, setDistrito] = useState(CAMPO_VACIO);
@@ -53,7 +56,7 @@ export default function BuscadorExpedientes({
   const [parte, setParte] = useState('');
 
   // Por código de expediente
-  const [codigoExpediente, setCodigoExpediente] = useState('');
+  const [codigoExpediente, setCodigoExpediente] = useState(codigoInicial);
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
